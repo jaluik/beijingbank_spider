@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import numpy as np
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -15,12 +16,16 @@ class YoutubeSpider():
 
     def main(self):
         option = webdriver.ChromeOptions()
-        option.add_argument('headless')
-        self.driver = webdriver.Chrome(sys.path[0] + "/chromedriver")
+        prefs = {
+        "profile.managed_default_content_settings.images": 2,
+        "permissions.default.stylesheet": 2
+        }
+        option.add_experimental_option("prefs", prefs)
+        # option.add_argument('headless')
+        self.driver = webdriver.Chrome(sys.path[0] + "/chromedriver", options=option)
         try:
             self.get_youtube_url()
             self.get_download_url()
-            print(self.youtube_down_list)
         finally:
             self.driver.close()
 
@@ -43,7 +48,7 @@ class YoutubeSpider():
 
     def get_download_url(self):
         file_name = sys.path[0] + "/href.txt"
-        file_err_name = sys.path[0] + "/href.txt"
+        file_err_name = sys.path[0] + "/error.txt"
         fd = open(file_name, "w")
         fe = open(file_err_name, "w")
         num = 1
@@ -57,9 +62,10 @@ class YoutubeSpider():
             for btn in btns:
                 btn.click()
                 input.clear()
+                time.sleep(1)
             # 等到元素出现后再显示
             try:
-                elem = WebDriverWait(self.driver, 15).until(
+                elem = WebDriverWait(self.driver, 8).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "div.def-btn-box > a")))
                 print(elem)
                 name = elem.get_attribute("download")
@@ -75,6 +81,7 @@ class YoutubeSpider():
                 continue
 
         print(f"{num - 1}个文件地址写入成功！")
+        print(f"{num - 1 - len(self.youtube_down_list)}个文件地址写入失败！")
         fd.close()
         fe.close()
 
