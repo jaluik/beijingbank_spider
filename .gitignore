@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 */chromedriver
 youtube_spider/*.npy
-youtube_spider/href.npy
+youtube_spider/href.txt
 
 .idea/
 pdfs/
