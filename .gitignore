@@ -3,8 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 */chromedriver
-youtube_spider/*.npy
+youtube_spider/error.npy
 youtube_spider/href.txt
+youtube_spider/error.txt
+
 
 .idea/
 pdfs/
